@@ -1,11 +1,19 @@
-import React from 'react'
-import products from '../products'
+import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
 import Rating from '../components/Rating'
 
 const ProductScreen = ({ match }) => {
-    const product = products.find(p => p._id === match.params.id)
+    const [product, setProduct] = useState({})
+
+    useEffect(() => {
+        fetch(`/api/products/${match.params.id}`)
+            .then(res => res.json())
+            .then(data => setProduct(data))
+            .catch(err => console.log(err))
+       
+    }, [match])
+
     return (
         <>
             <Link className='btn btn-dark my-3' to='/'>
@@ -15,7 +23,7 @@ const ProductScreen = ({ match }) => {
                 <Col md={6}>
                     <Image src={product.image} alt={product.name} fluid/>
                 </Col>
-                <Col MD={3}>
+                <Col md={3}>
                     <ListGroup variant='flush'>
                         <ListGroup.Item>
                             <h3>{product.name}</h3>
