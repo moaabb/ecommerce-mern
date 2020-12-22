@@ -1,30 +1,38 @@
-import React, {useState, useEffect} from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product'
-
+import { listProducts } from '../actions/productActions'
 
 const HomeScreen =  () => {
-    const [products, setProducts] = useState([])
+    const dispatch = useDispatch()
+    
+    const productList = useSelector(state => state.productList)
+    const {loading, error, products} = productList
 
     useEffect(() => {
-        fetch('/api/products')
-            .then(res => res.json())
-            .then(data => setProducts(data))
-            .catch(err => console.log(err))
-       
-    }, [])
+        dispatch(listProducts())
+    }, [dispatch])
+
     return (
             <>
                 <h1>Our Latest Products</h1>
-                <Row>
-                    {products.map(product => {
-                        return (
-                            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                               <Product product={product}/>                         
-                            </Col>
-                        )
-                    })}
-                </Row>  
+                {loading ? 
+                <h2>Loading...</h2> : 
+                error ? 
+                <h2>{error}</h2> : 
+                (
+                    <Row>
+                        {products.map(product => {
+                            return (
+                                <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                                <Product product={product}/>                         
+                                </Col>
+                            )
+                        })}
+                    </Row> 
+                ) }
+                 
             </>
     )
     
