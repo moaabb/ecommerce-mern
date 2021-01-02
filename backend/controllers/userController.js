@@ -59,8 +59,10 @@ export const authUser = async (req, res) => {
             token: generateToken(user._id)
         })
     }   else {
-        res.status(401).json({Error:'Invalid email or password'})
-        
+        res.status(401).json({
+            error: "invalid email or"
+        })
+    
     }
    
 }
@@ -86,3 +88,35 @@ export const getUserProfile = async (req, res) => {
    }
 }
 
+// @desc Update user profile
+// @Route PUT /api/users/profile
+// @access Private
+
+export const updateUserProfile = async (req, res) => {
+    const user = await User.findById(req.user._id)
+    
+    if (user) {
+        user.name = req.body.name || user.name
+        user.email = req.body.email || user.email
+        if (req.body.password) {
+            user.password = req.body.password
+        }
+
+
+        const updatedUser = await user.save()
+
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+            token: generateToken(updatedUser._id) 
+        })
+
+        
+    } else {
+        res.json(401).json({
+            message: "User not found"
+        })
+    }
+ }
