@@ -1,5 +1,4 @@
 import Product from '../models/productModel.js'
-import mongoose from 'mongoose'
 
 // @desc FETCH All products
 // @Route GET /api/products
