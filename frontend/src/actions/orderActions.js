@@ -66,7 +66,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
     }
 }
 
-export const createOrder = (orderID, paymentResult) => async (dispatch, getState) => {
+export const createOrderPay = (orderID, paymentResult) => async (dispatch, getState) => {
 
     try {
         dispatch({
