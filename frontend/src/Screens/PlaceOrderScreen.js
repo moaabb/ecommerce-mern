@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from  'react-redux'
 import Message from '../components/Message'
 import { Link } from 'react-router-dom'
-import { Button, Col, Row, ListGroup, Image, Card } from 'react-bootstrap'
+import { Button, Col, Row, ListGroup, Image, Card} from 'react-bootstrap'
 import CheckoutSteps from '../components/CheckoutSteps'
 import { createOrder } from '../actions/orderActions'
 
@@ -13,7 +13,7 @@ const PlaceOrderScreen = ({ history }) => {
     const cart = useSelector(state => state.cart)
     const { cartItems } = cart
 
-    const { order, error, success } = useSelector(state => state.orderCreate)
+    const { order, error, success: successCreate } = useSelector(state => state.orderCreate)
 
     if (!cart.shippingAddress.address) {
         history.push('/shipping')
@@ -41,14 +41,15 @@ const PlaceOrderScreen = ({ history }) => {
             taxPrice: cart.taxPrice,
             totalPrice: cart.totalPrice
         }))
+
     }
 
     useEffect(() => {
-        if(success) {
+        if(successCreate) {
             history.push(`/order/${order._id}`)
         }
         // eslint-disable-next-line
-    }, [history, success, order])
+    }, [history, successCreate, order])
     return (
         <>
             <CheckoutSteps step1 step2 step3 step4/>

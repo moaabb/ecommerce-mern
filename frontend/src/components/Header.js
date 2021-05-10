@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../actions/userActions'
 
-const Header = () => {
+const Header = ({history}) => {
 
     const dispatch = useDispatch()
 
@@ -13,6 +13,7 @@ const Header = () => {
 
     const logoutHandler = () => {
         dispatch(logout())
+
     }
     return (
         <header>
@@ -41,6 +42,20 @@ const Header = () => {
                                 <Nav.Link><i className='fas fa-user'></i> Sign In</Nav.Link>
                             </LinkContainer>
                         }
+
+                        {userInfo && userInfo.isAdmin && (
+                            <NavDropdown title='Admin' id='admin-menu'>
+                                <LinkContainer to='/admin/userlist'>
+                                    <NavDropdown.Item>User List</NavDropdown.Item>
+                                </LinkContainer>
+                                <LinkContainer to='/admin/productlist'>
+                                    <NavDropdown.Item>Product List</NavDropdown.Item>
+                                </LinkContainer>
+                                <LinkContainer to='/admin/orderlist'>
+                                    <NavDropdown.Item>Order List</NavDropdown.Item>
+                                </LinkContainer>
+                            </NavDropdown>
+                        )}
                         
                         </Nav>
                     </Navbar.Collapse>

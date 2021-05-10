@@ -80,3 +80,12 @@ export const updateOrderToPaid = async (req, res) => {
     }
 
 }
+
+// @desc Get logged in users orders
+// @Route PUT /api/orders/myorders
+// @access Private
+
+export const getUserOrders = async (req, res) => {
+    const orders = await Order.find({user: req.user._id})
+    res.json(orders)
+}
