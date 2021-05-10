@@ -6,9 +6,9 @@ import Loader from '../components/Loader'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from  'react-redux'
 import { Row, Col, Form, Button, Table } from 'react-bootstrap'
-import { ORDER_DETAILS_REQUEST, ORDER_DETAILS_RESET } from '../constants/orderConstants'
+import { ORDER_DETAILS_RESET } from '../constants/orderConstants'
 
-const LoginScreen = ({ history, location }) => {
+const ProfileScreen = ({ history, location }) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -147,4 +147,4 @@ const LoginScreen = ({ history, location }) => {
     )
 }
 
-export default LoginScreen
+export default ProfileScreen

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from  'react-redux'
 import FormContainer from '../components/FormContainer'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 
-const LoginScreen = ({ history, location }) => {
+const RegisterScreen = ({ history, location }) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -87,4 +87,4 @@ const LoginScreen = ({ history, location }) => {
     )
 }
 
-export default LoginScreen
+export default RegisterScreen
