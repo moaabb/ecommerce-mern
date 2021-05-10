@@ -7,15 +7,14 @@ import { useDispatch, useSelector } from  'react-redux'
 import FormContainer from '../components/FormContainer'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 
-const RegisterScreen = ({ history, location }) => {
+const UserEditScreen = ({ history, location }) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    const [isAdmin, setIsAdmin] = useState('')
+
    
     const dispatch = useDispatch()
 
-    const userRegister = useSelector(state => state.userRegister)
 
     const { loading, error, userInfo } = userRegister
 
@@ -29,14 +28,9 @@ const RegisterScreen = ({ history, location }) => {
     }, [userInfo, history, redirect])
     
     
-
     const submitHandler =  (e) => {
         e.preventDefault()
 
-        if (password === confirmPassword) {
-            dispatch(register(name, email, password))
-        }
-        
 
     }
 
@@ -57,15 +51,9 @@ const RegisterScreen = ({ history, location }) => {
                     <Form.Control type='email' placeholder='Enter your email' value={email} onChange={e => setEmail(e.target.value)}></Form.Control>
                 </Form.Group>
 
-                <Form.Group controlId='password'>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type='password' placeholder='Enter your password' value={password} onChange={e => setPassword(e.target.value)}></Form.Control>
-                </Form.Group>
-
-
                 <Form.Group controlId='confirmPassword'>
-                    <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control type='password' placeholder='Enter your password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}></Form.Control>
+                    <Form.Label>Is Admin</Form.Label>
+                    <Form.Check type='checkbox' label='is Admin' onChange={e => setIsAdmin(e.target.check)}></Form.Check>
                 </Form.Group>
 
                 <Button type='submit' variant='primary'>
@@ -73,18 +61,10 @@ const RegisterScreen = ({ history, location }) => {
                 </Button>
             </Form>
 
-            <Row className='py-3'>
-                <Col>
-                    Have an account?{' '}
-                    <Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
-                        Login
-                    </Link>
-                </Col>
-            </Row>
         </FormContainer>
 
         
     )
 }
 
-export default RegisterScreen
+export default UserEditScreen
