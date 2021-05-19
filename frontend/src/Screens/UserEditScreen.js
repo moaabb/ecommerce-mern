@@ -24,31 +24,28 @@ const UserEditScreen = ({ history, match }) => {
     const { loading, error, user } = userDetails
 
     useEffect(() => {
-        if (!user.name || user._id !== userID ) {
-            dispatch(getUserDetails(userID))
-        } else {
-            setName(user.name)
-            setEmail(user.email)
-            setIsAdmin(user.isAdmin)
-        }
-
         if (successUpdate) {
             alert('User succesfully updated')
             history.push('/admin/userlist')
             dispatch({ type: USER_UPDATE_RESET })
             dispatch({ type: USER_DETAILS_RESET })
+        } else {
+            if (!user.name || user._id !== userID ) {
+                dispatch(getUserDetails(userID))
+            } else {
+                setName(user.name)
+                setEmail(user.email)
+                setIsAdmin(user.isAdmin)
+            }
         }
         
     }, [userID, user, successUpdate, history, dispatch])
     
     const submitHandler =  (e) => {
         e.preventDefault()
-
         if (window.confirm("Are you sure?")) {
-            dispatch(updateUser({id: userID, name, email, isAdmin}))
-            
+            dispatch(updateUser({id: userID, name, email, isAdmin}))   
         }
-
     }
 
     return (
@@ -59,7 +56,7 @@ const UserEditScreen = ({ history, match }) => {
             </Link>
             {loading ? <Loader/> : error ? <Message variant='danger'>{error}</Message> : (
                 <FormContainer>
-                    <h1>Sign Up</h1>
+                    <h1>Edit User</h1>
                     
                     <Form onSubmit={submitHandler}>
                         <Form.Group controlId='name'>

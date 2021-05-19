@@ -4,24 +4,24 @@ import axios from 'axios'
 import { PayPalButton } from "react-paypal-button-v2"
 import Message from '../components/Message'
 import { Link } from 'react-router-dom'
-import { Col, Row, ListGroup, Image, Card } from 'react-bootstrap'
+import { Col, Row, ListGroup, Image, Card, Button } from 'react-bootstrap'
 import Loader from '../components/Loader'
-import { getOrderDetails, payOrder } from '../actions/orderActions'
-import {ORDER_PAY_RESET} from '../constants/orderConstants'
+import { getOrderDetails, orderDeliver, payOrder } from '../actions/orderActions'
+import {ORDER_PAY_RESET, ORDER_DELIVER_RESET} from '../constants/orderConstants'
 
-
-
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
     const orderID = match.params.id
     const dispatch = useDispatch()
 
     const [sdkReady, setSdkReady] = useState(false)
 
-    const { order, error, loading } = useSelector(state => state.orderDetails)
-    
-    const { loading: loadingPay, success: successPay } = useSelector(state => state.orderPay)
 
-    useEffect(() => {
+    const { order, error, loading: loadingDetails } = useSelector(state => state.orderDetails)
+    const { userInfo } = useSelector(state => state.userLogin)
+    const { loading: loadingPay, success: successPay } = useSelector(state => state.orderPay)
+    const { loading: loadingDeliver, success: successDeliver } = useSelector(state => state.orderDeliver)
+
+    useEffect(() => {        
         const addPayPalScript = async () => {
             const { data: clientId } = await axios.get('/api/config/paypal')
             const script = document.createElement('script')
@@ -32,10 +32,18 @@ const OrderScreen = ({ match }) => {
             script.onload = () => setSdkReady(true)
             document.body.appendChild(script)
         }
+        
+        !userInfo && history.push('/login') 
+        if (order && userInfo) {
+            if (order.user._id !== userInfo._id && !userInfo.isAdmin) history.push('/')
+        } 
 
-        if(!order || successPay) {
+
+        if(!order || successPay || successDeliver) {
+            dispatch({type: ORDER_DELIVER_RESET})
             dispatch({type: ORDER_PAY_RESET})
             dispatch(getOrderDetails(orderID))
+
         } else if(!order.isPaid) {
             if (!window.paypal) {
                 addPayPalScript()
@@ -43,15 +51,22 @@ const OrderScreen = ({ match }) => {
                 setSdkReady(true)
             }
         }
-    }, [dispatch, orderID, order, successPay])
+
+        
+
+    }, [dispatch, orderID, order, successPay, history, userInfo, successDeliver])
 
     const onSuccessHandler = (paymentResult) => {
         console.log(paymentResult)
         dispatch(payOrder(orderID, paymentResult))
     }
 
+    const onDeliverHandler = () => {
+        dispatch(orderDeliver(order))
+    }
 
-    return loading ? <Loader/> : error ? <Message variant='danger'>{ error }</Message> : 
+
+    return loadingDetails ? <Loader/> : error ? <Message variant='danger'>{ error }</Message> : 
     (
         <>
             <h1>Order {order._id}</h1>
@@ -60,28 +75,28 @@ const OrderScreen = ({ match }) => {
                     <ListGroup variant='flush'>
                         <ListGroup.Item>
                             <h2>Shipping</h2>
-                            <p>
+                            <div className='my-3'>
                                 <strong>Name:</strong> {order.user.name}
-                            </p>
-                            <p>
+                            </div>
+                            <div className='my-3'>
                                 <strong>Email:</strong>
                                 <a href={`mailto:${order.user.email}`}> {order.user.email}</a>
-                            </p>
-                            <p>
+                            </div>
+                            <div className='my-3'>
                                 <strong>Address:</strong> {order.shippingAddress.address}, {order.shippingAddress.city} {order.shippingAddress.postalCode}, {order.shippingAddress.country} 
-                            </p>
-                            <p>
+                            </div>
+                            <div className='my-3'>
                                 {order.isDelivered ? <Message variant='success'>Delivered at {order.deliveredAt}</Message>: <Message variant='danger'>Not Delivered</Message>}
-                            </p>
+                            </div>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <h2>Payment Method</h2>
-                            <p>
+                            <div className='my-3'>
                                 <strong> Method: </strong> {order.paymentMethod}
-                            </p>
-                            <p>
+                            </div>
+                            <div className='my-3'>
                                 {order.isPaid ? <Message variant='success'>Paid on {order.paidAt}</Message>: <Message variant='danger'>Not Paid</Message>}
-                            </p>
+                            </div>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <h2>Order Items</h2>
@@ -148,7 +163,14 @@ const OrderScreen = ({ match }) => {
                                     )}
                                 </ListGroup.Item>
                             )}
-                            
+                            {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                <ListGroup.Item>
+                                    <Button  type='button' className='btn btn-block' onClick={onDeliverHandler}>
+                                        Mark as Delivered
+                                    </Button>
+                                    {loadingDeliver && <Loader/>}
+                                </ListGroup.Item>
+                            )}
                         </ListGroup>
                     </Card>
                 </Col>
