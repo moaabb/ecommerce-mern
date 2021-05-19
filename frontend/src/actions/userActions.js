@@ -219,12 +219,9 @@ export const updateUser = (user) => async (dispatch, getState) => {
             }
         }
 
-        const { data } = await axios.put(`/api/users/${user.id}`, user,  config)
+        await axios.put(`/api/users/${user.id}`, user,  config)
 
-        dispatch({
-            type: USER_UPDATE_SUCCESS,
-            payload: data
-        })
+        dispatch({ type: USER_UPDATE_SUCCESS })
 
 
     } catch (error) {

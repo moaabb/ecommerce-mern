@@ -1,6 +1,5 @@
 import Order from '../models/orderModel.js'
 
-
 // @desc Create a new Order
 // @Route POST /api/orders
 // @access Private
@@ -46,7 +45,6 @@ export const addOrderItems = async (req, res) => {
 export const getOrderByID = async (req, res) => {
     const order = await Order.findById(req.params.id).populate('user', 'name email')
 
-
     if (order) {
         res.json(order)
     } else {
@@ -82,10 +80,39 @@ export const updateOrderToPaid = async (req, res) => {
 }
 
 // @desc Get logged in users orders
-// @Route PUT /api/orders/myorders
+// @Route GET /api/orders/myorders
 // @access Private
 
 export const getUserOrders = async (req, res) => {
     const orders = await Order.find({user: req.user._id})
     res.json(orders)
 }
+
+// @desc Get all Orders
+// @Route PUT /api/orders/myorders
+// @access Private/admin
+
+export const listOrders = async (req, res) => {
+    const orders = await Order.find({}).populate('user', 'id name')
+    res.json(orders)
+}
+
+// @desc Update order to delivered
+// @Route PUT /api/orders/:id/deliver
+// @access Private/admin
+
+export const updateOrderToDelivered = async (req, res) => {
+    const order = await Order.findById(req.params.id)
+
+    if (order) {
+        order.isDelivered = true
+        order.deliveredAt = Date.now()
+
+        const updatedOrder = await order.save()
+
+        res.json(updatedOrder)
+    } else {
+        res.status(404).json({error: 'Order not found'})
+    }
+}
+
