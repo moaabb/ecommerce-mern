@@ -4,10 +4,22 @@ import Product from '../models/productModel.js'
 // @Route GET /api/products
 // @access Public
 
-export const getProducts = (req, res) => {
-    Product.find()
-        .then(data => res.json(data))
-        .catch(err => res.status(404).json({message: err.message}))
+export const getProducts = async (req, res) => {
+    const keyword = req.query.keyword 
+    ?   {
+            name: {
+                $regex: req.query.keyword,
+                $options: 'i'
+            }
+        } 
+    : {}
+
+    console.log(keyword)
+
+    const products = await Product.find({...keyword}) 
+    
+    res.json(products)
+
 }
 
 // @desc FETCH a single product by ID
