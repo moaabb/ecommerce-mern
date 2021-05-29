@@ -7,8 +7,8 @@ import { listProductDetails, createProductReview } from '../actions/productActio
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
-import { PRODUCT_CREATE_REVIEW_FAIL, PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
-// import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
+import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
+
 
 const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1)
