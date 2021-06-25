@@ -7,6 +7,7 @@ import productRouter from './routes/productsRoutes.js'
 import userRouter from './routes/userRoutes.js'
 import orderRouter from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import morgan from 'morgan'
 
 const app = express()
 
@@ -18,12 +19,17 @@ dotenv.config()
 connectDB()
 app.use(express.json())
 
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'))
+}
+
 // API Routes
 
 app.use('/api/products', productRouter)
 app.use('/api/users', userRouter)
 app.use('/api/orders', orderRouter)
 app.use('/api/upload', uploadRoutes)
+
 
 app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_ID))
 
