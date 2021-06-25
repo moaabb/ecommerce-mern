@@ -14,8 +14,6 @@ export const getProducts = async (req, res) => {
         } 
     : {}
 
-    console.log(keyword)
-
     const products = await Product.find({...keyword}) 
     
     res.json(products)
