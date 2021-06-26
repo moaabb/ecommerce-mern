@@ -5,6 +5,8 @@ import Product from '../models/productModel.js'
 // @access Public
 
 export const getProducts = async (req, res) => {
+    const pageSize = 10
+    const page = Number(req.query.pageNumber) || 1
     const keyword = req.query.keyword 
     ?   {
             name: {
@@ -14,9 +16,11 @@ export const getProducts = async (req, res) => {
         } 
     : {}
 
-    const products = await Product.find({...keyword}) 
+    const count = await Product.countDocuments({ ...keyword })
+    const products = await Product.find({...keyword}).limit(pageSize).skip(pageSize * (page - 1)) 
     
-    res.json(products)
+
+    res.json({products, page, pages: Math.ceil(count / pageSize)})
 
 }
 
@@ -140,3 +144,14 @@ export const createProductReview = async (req, res) => {
         res.json({error: "Product not found"})
     }
   }
+
+// @desc Get top rated products
+// @Route GET /api/products/Top
+// @access Public
+
+export const getTopProducts = async (req, res) => {
+
+const products = await Product.find({}).sort({rating: -1}).limit(3)
+   
+res.json(products)
+}

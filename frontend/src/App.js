@@ -32,10 +32,13 @@ const App = () => {
           <Route path='/admin/userlist' component={UserListScreen} exact />
           <Route path='/admin/orderlist' component={OrderListScreen} exact />
           <Route path='/admin/productlist' component={ProductListScreen} exact />
+          <Route path='/admin/productlist/page/:pageNumber' component={ProductListScreen} exact />
           <Route path='/admin/product/:id?/edit' component={ProductEditScreen} exact />
           <Route path='/admin/user/:id?/edit' component={UserEditScreen} />
+          <Route exact path='/search/:keyword' component={HomeScreen} />
+          <Route exact path='/page/:pageNumber' component={HomeScreen} />
+          <Route exact path='/search/:keyword/page/:pageNumber' component={HomeScreen} />
           <Route path='/' component={HomeScreen} exact/>
-          <Route path='/search/:keyword' component={HomeScreen} />
           <Route path='/profile' component={ProfileScreen} exact />
           <Route path='/product/:id?' component={ProductScreen}/>
           <Route path='/cart/:id?' component={CartScreen}/>
