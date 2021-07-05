@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  loja:
+    image: moaabb/proshop:1.2.1
+    environment: 
+      NODE_ENV: production
+      PORT: 5000
+      JWT_SECRET: /run/secrets/JWT_SECRET
+      PAYPAL_CLIENT_ID: /run/secrets/PAYPAL_CLIENT_ID
+    networks:
+      - loja-net  
+    secrets:
+      - PAYPAL_CLIENT_ID
+      - JWT_SECRET
+      - source: db_uri
+        target: MONGO_URI
+    ports:
+      - "80:5000"    
+
+networks:
+  loja-net:
+    driver: overlay
+
+secrets:
+  db_uri:
+    external: true
+  JWT_SECRET:
+    external: true
+  PAYPAL_CLIENT_ID:
+    external: true
