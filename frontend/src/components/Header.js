@@ -32,15 +32,15 @@ const Header = ({history}) => {
                             <Nav.Link> <i className='fas fa-shopping-cart'></i> Cart</Nav.Link>
                         </LinkContainer>
 
-                        {userInfo ? 
-                            
+                        {userInfo ?
+
                             <NavDropdown title={userInfo.name} id='username'>
                                 <LinkContainer to='/profile'>
                                     <NavDropdown.Item>Profile</NavDropdown.Item>
                                 </LinkContainer>
                                 <NavDropdown.Item onClick={logoutHandler}>Log Out</NavDropdown.Item>
                             </NavDropdown>
-                             : 
+                             :
                             <LinkContainer to='/login'>
                                 <Nav.Link><i className='fas fa-user'></i> Sign In</Nav.Link>
                             </LinkContainer>
@@ -59,7 +59,7 @@ const Header = ({history}) => {
                                 </LinkContainer>
                             </NavDropdown>
                         )}
-                        
+
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
