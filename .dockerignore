@@ -1,0 +1,11 @@
+.dockerignore
+node_modules
+npm-debug.log
+Dockerfile
+.git
+.gitignore
+Procfile
+docker-stack.yaml
+docker-compose.yaml
+.github
+.env

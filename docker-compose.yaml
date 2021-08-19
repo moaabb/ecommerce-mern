@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+  proshop:
+    image: moaabb/loja:1.1
+    environment:
+      JWT_SECRET: SICPARVISMAGNA
+      PAYPAL_CLIENT_ID: AW3a67NkrqHlUcul5X7w4xrVGSRodoF2GuLf83iqp5h55YfE8beFH_pGZKVdZvN2VVvYCDpaT84Po1Yg
+      MONGO_URI: "mongodb://proshop_admin:linuxtips123@mongo:27017/proshop?retryWrites=true&w=majority"
+        # mongodb://proshop_admin:linuxtips123@10.0.0.113:27017/proshop?retryWrites=true&w=majority
+    networks:
+      - loja-net
+    ports:
+      - "8080:5000"
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: proshop
+      MONGO_INITDB_ROOT_PASSWORD: bebe
+      MONGO_INITDB_DATABASE: proshop
+    volumes:
+      - my-db:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+      - loja-net
+
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #   - 8081:8081
+  #   depends_on:
+  #     - mongo
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: proshop
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: bebe
+  #     ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+  #     ME_CONFIG_MONGODB_URL: mongodb://proshop:bebe@mongo:27017/
+  #   networks:
+  #     - loja-net
+  # seeder:
+  #   image: moaabb/seeder:1.0
+  #   environment:
+  #     MONGO_URI: "mongodb://proshop_admin:linuxtips123@mongo:27017/proshop?retryWrites=true&w=majority"
+  #   depends_on:
+  #     - mongo
+  #   networks:
+  #     - loja-net
+
+networks:
+  loja-net:
+    driver: overlay
+
+volumes:
+   my-db:
+
+
